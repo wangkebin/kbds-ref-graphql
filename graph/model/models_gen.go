@@ -2,25 +2,24 @@
 
 package model
 
-type Mutation struct {
+type FileInfo struct {
+	ID        string  `json:"id" gorm:"column:id;PRIMARY_KEY"`
+	Location  string  `json:"location" gorm:"column:loc"`
+	Size      *int    `json:"size,omitempty" gorm:"column:size"`
+	Name      *string `json:"name,omitempty" gorm:"column:name"`
+	MachineID string  `json:"machineId" gorm:"column:machine_id"`
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Machine struct {
+	ID       string `json:"id" gorm:"column:id;PRIMARY_KEY"`
+	Name     string `json:"name" gorm:"column:name"`
+	Writable bool   `json:"writable" gorm:"column:writable"`
+}
+
+type MachineFiles struct {
+	Machine *Machine    `json:"machine,omitempty"`
+	Files   []*FileInfo `json:"files,omitempty"`
 }
 
 type Query struct {
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
 }

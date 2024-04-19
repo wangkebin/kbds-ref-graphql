@@ -1,28 +1,43 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+directive @goModel(
+  model: String
+  models: [String!]
+) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+directive @goField(
+  forceResolver: Boolean
+  name: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+directive @goTag(
+  key: String!
+  value: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+type Machine {
+  id: ID! @goTag(key: "gorm", value: "column:id;PRIMARY_KEY")
+  name: String! @goTag(key: "gorm", value: "column:name")
+  writable: Boolean! @goTag(key: "gorm", value: "column:writable")
 }
 
-type User {
-  id: ID!
-  name: String!
+type FileInfo {
+  id: ID! @goTag(key: "gorm", value: "column:id;PRIMARY_KEY")
+  location: String! @goTag(key: "gorm", value: "column:loc")
+  size: Int @goTag(key: "gorm", value: "column:size")
+  name: String @goTag(key: "gorm", value: "column:name")
+  machineId: ID! @goTag(key: "gorm", value: "column:machine_id")
+}
+
+
+type MachineFiles {
+  machine: Machine
+  files: [FileInfo]
 }
 
 type Query {
-  todos: [Todo!]!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
-}
-
-type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  SearchFiles(
+    name: String
+  ): [FileInfo]
+  GetDups(
+    machine: String
+  ): MachineFiles
 }
